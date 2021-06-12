@@ -440,24 +440,30 @@ export const handleCreateAccountWithSeedPhrase = (accountId, recoveryKeyPair, fu
 
 
 export const finishAccountSetup = () => async (dispatch, getState) => {
+    console.log('finishAccountSetup #1');
     await dispatch(refreshAccount())
+    console.log('finishAccountSetup #2');
     await dispatch(getBalance())
+    console.log('finishAccountSetup #3');
     await dispatch(staking.clearState())
+    console.log('finishAccountSetup #4');
     const { balance, url, accountId } = getState().account
 
     let promptTwoFactor = await TwoFactor.checkCanEnableTwoFactor(balance)
+    console.log('finishAccountSetup #5', promptTwoFactor);
 
     if (new BN(balance.available).lt(new BN(utils.format.parseNearAmount(MULTISIG_MIN_PROMPT_AMOUNT)))) {
         promptTwoFactor = false
     }
 
-    console.log('finish account setup', url, getState());
+    console.log('finishAccountSetup #6', url, getState());
 
     if (promptTwoFactor) {
         dispatch(redirectTo('/enable-two-factor', { globalAlertPreventClear: true }))
     } else {
         if (url?.redirectUrl) {
-            window.location = `${url.redirectUrl}?accountId=${accountId}`
+            // window.location = `${url.redirectUrl}?accountId=${accountId}`
+            console.log('finishAccountSetup #6: will redirect to', `${url.redirectUrl}?accountId=${accountId}`)
         } else {
             dispatch(redirectToApp('/'))
         }

@@ -338,6 +338,7 @@ class Wallet {
 
         const { fundingContract, fundingKey, fundingAccountId, fundingAmount } = fundingOptions || {}
         if (fundingContract && fundingKey) {
+            console.log("createNewAccount #1: ", fundingContract, fundingKey);
             await this.createNewAccountLinkdrop(accountId, fundingContract, fundingKey, publicKey)
             await this.keyStore.removeKey(NETWORK_ID, fundingContract)
             if (fundingAmount) {
@@ -359,7 +360,9 @@ class Wallet {
         }
 
         await this.saveAndSelectAccount(accountId);
+        console.log("createNewAccount #2: ", accountId);
         await this.addLocalKeyAndFinishSetup(accountId, recoveryMethod, publicKey, previousAccountId)
+        console.log("createNewAccount #3: ", accountId, recoveryMethod, publicKey, previousAccountId);
     }
 
     async createNewAccountFromAnother(accountId, fundingAccountId, publicKey) {
@@ -722,23 +725,32 @@ class Wallet {
     }
 
     async addLocalKeyAndFinishSetup(accountId, recoveryMethod, publicKey, previousAccountId) {
+        console.log("addLocalKeyAndFinishSetup #1", accountId, recoveryMethod, publicKey, previousAccountId);
         if (recoveryMethod === 'ledger') {
+            console.log("addLocalKeyAndFinishSetup #2", accountId);
             await this.addLedgerAccountId(accountId)
             await this.postSignedJson('/account/ledgerKeyAdded', { accountId, publicKey: publicKey.toString() })
         } else {
             const newKeyPair = KeyPair.fromRandom('ed25519')
             const newPublicKey = newKeyPair.publicKey
+            console.log("addLocalKeyAndFinishSetup #3", newPublicKey);
             if (recoveryMethod !== 'seed') {
+                console.log("addLocalKeyAndFinishSetup #4", newKeyPair);
                 await this.addNewAccessKeyToAccount(accountId, newPublicKey)
                 await this.saveAccount(accountId, newKeyPair)
             } else {
+                console.log("addLocalKeyAndFinishSetup #5", newKeyPair);
                 const contractName = null;
                 const fullAccess = true;
                 await wallet.postSignedJson('/account/seedPhraseAdded', { accountId, publicKey: publicKey.toString() })
+                console.log("addLocalKeyAndFinishSetup #6", publicKey.toString());
                 try {
                     await wallet.addAccessKey(accountId, contractName, newPublicKey, fullAccess)
+                    console.log("addLocalKeyAndFinishSetup #7", accountId, contractName, newPublicKey, fullAccess);
                     await this.saveAccount(accountId, newKeyPair)
+                    console.log("addLocalKeyAndFinishSetup #8", accountId, newKeyPair);
                 } catch (error) {
+                    console.log("addLocalKeyAndFinishSetup #9", previousAccountId);
                     if (previousAccountId) {
                         await wallet.saveAndSelectAccount(previousAccountId)
                     }
@@ -747,7 +759,9 @@ class Wallet {
             }
         }
 
+        console.log("addLocalKeyAndFinishSetup #10");
         await store.dispatch(finishAccountSetup())
+        console.log("addLocalKeyAndFinishSetup #11");
     }
 
     async setupRecoveryMessage(accountId, method, securityCode, recoverySeedPhrase) {
