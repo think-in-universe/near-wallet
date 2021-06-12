@@ -129,6 +129,8 @@ class Routing extends Component {
             router
         } = this.props
 
+        console.log("componnet did mount");
+
         handleRefreshUrl(router)
         refreshAccount()
 

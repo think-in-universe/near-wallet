@@ -52,11 +52,14 @@ export const handleRedirectUrl = (previousLocation) => (dispatch, getState) => {
     const createAccountPage = page === WALLET_CREATE_NEW_ACCOUNT_URL
     const recoverAccountPage = page === WALLET_RECOVER_ACCOUNT_URL
 
+    console.log('handleRedirectUrl: #1', isValidRedirectUrl, page);
+
     if ((guestLandingPage || createAccountPage || recoverAccountPage) && isValidRedirectUrl) {
         let url = {
             ...getState().account.url,
             redirect_url: previousLocation.pathname
         }
+        console.log('handleRedirectUrl: #2', url);
         saveState(url)
         dispatch(refreshUrl(url))
     }
@@ -80,6 +83,7 @@ export const parseTransactionsToSign = createAction('PARSE_TRANSACTIONS_TO_SIGN'
 export const handleRefreshUrl = (prevRouter) => (dispatch, getState) => {
     const { pathname, search } = prevRouter?.location || getState().router.location
     const currentPage = pathname.split('/')[pathname[1] === '/' ? 2 : 1]
+    console.log("handleRefreshUrl: #0", currentPage);
     if ([...WALLET_CREATE_NEW_ACCOUNT_FLOW_URLS, WALLET_LOGIN_URL, WALLET_SIGN_URL].includes(currentPage)) {
         const parsedUrl = {
             referrer: document.referrer && new URL(document.referrer).hostname,
@@ -88,12 +92,15 @@ export const handleRefreshUrl = (prevRouter) => (dispatch, getState) => {
         }
         if ([WALLET_CREATE_NEW_ACCOUNT_URL].includes(currentPage) && search !== '') {
             saveState(parsedUrl)
+            console.log("handleRefreshUrl: #1", parsedUrl);
             dispatch(refreshUrl(parsedUrl))
         } else if ([WALLET_LOGIN_URL, WALLET_SIGN_URL].includes(currentPage) && search !== '') {
             saveState(parsedUrl)
+            console.log("handleRefreshUrl: #2", parsedUrl);
             dispatch(refreshUrl(parsedUrl))
             dispatch(checkContractId())
         } else {
+            console.log("handleRefreshUrl: #3", parsedUrl, loadState());
             dispatch(refreshUrl(loadState()))
         }
         dispatch(handleFlowLimitation())
@@ -443,6 +450,8 @@ export const finishAccountSetup = () => async (dispatch, getState) => {
     if (new BN(balance.available).lt(new BN(utils.format.parseNearAmount(MULTISIG_MIN_PROMPT_AMOUNT)))) {
         promptTwoFactor = false
     }
+
+    console.log('finish account setup', url, getState());
 
     if (promptTwoFactor) {
         dispatch(redirectTo('/enable-two-factor', { globalAlertPreventClear: true }))
