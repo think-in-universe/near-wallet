@@ -72,6 +72,7 @@ export const handleClearUrl = () => (dispatch, getState) => {
     const saveUrlPages = [...WALLET_CREATE_NEW_ACCOUNT_FLOW_URLS, WALLET_LOGIN_URL, WALLET_SIGN_URL].includes(page)
 
     if (!guestLandingPage && !saveUrlPages) {
+        console.log("handleClearUrl #1");
         clearState()
         dispatch(refreshUrl({}))
         dispatch(handleClearflowLimitation())
