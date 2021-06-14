@@ -463,7 +463,7 @@ export const finishAccountSetup = () => async (dispatch, getState) => {
     } else {
         if (url?.redirectUrl) {
             // window.location = `${url.redirectUrl}?accountId=${accountId}`
-            console.log('finishAccountSetup #6: will redirect to', `${url.redirectUrl}?accountId=${accountId}`)
+            console.log('finishAccountSetup #7: will redirect to', `${url.redirectUrl}?accountId=${accountId}`)
         } else {
             dispatch(redirectToApp('/'))
         }
