@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+
 import languagesIcon from '../../images/icon-languages.svg';
+import LanguageToggle from '../common/LangSwitcher';
+import DesktopMenu from './DesktopMenu';
 import Logo from './Logo';
 import NavLinks from './NavLinks';
+import SendReceiveButtons from './SendReceiveButtons';
 import UserAccount from './UserAccount';
-import DesktopMenu from './DesktopMenu';
-import LanguageToggle from '../common/LangSwitcher';
 
 const Container = styled.div`
     display: none;
@@ -38,7 +40,7 @@ const Container = styled.div`
         background-color: #E5E5E6;
         margin: 0 20px;
     }
-`
+`;
 
 
 const Lang = styled.div`
@@ -76,12 +78,13 @@ const Lang = styled.div`
         user-select: none;
         width: 54px;
         z-index: 1;
+        text-indent: 54px;
 
         &::-ms-expand {
             display: none;
         }
     }
-`
+`;
 
 class DesktopContainer extends Component {
     render() {
@@ -91,17 +94,20 @@ class DesktopContainer extends Component {
             menuOpen,
             toggleMenu,
             availableAccounts,
-            selectAccount,
+            handleSelectAccount,
             showNavLinks,
             flowLimitation,
             refreshBalance,
-            getBalance
-        } = this.props
+            getBalance,
+            isInactiveAccount
+        } = this.props;
+
+        const showAllNavigationLinks = showNavLinks && !isInactiveAccount && !flowLimitation.mainMenu;
 
         return (
             <Container>
                 <Logo link={!flowLimitation.mainMenu} />
-                {showNavLinks && !flowLimitation.mainMenu &&
+                {showAllNavigationLinks &&
                     <NavLinks />
                 }
                 <Lang>
@@ -121,17 +127,18 @@ class DesktopContainer extends Component {
                             accountId={account.accountId}
                             accountIdLocalStorage={account.localStorage?.accountId}
                             accounts={availableAccounts}
-                            selectAccount={selectAccount}
+                            handleSelectAccount={handleSelectAccount}
                             accountsBalance={account.accountsBalance}
                             balance={account.balance}
                             refreshBalance={refreshBalance}
                             getBalance={getBalance}
+                            isInactiveAccount={isInactiveAccount}
                         />
                     </>
                 }
             </Container>
-        )
+        );
     }
 }
 
-export default DesktopContainer
+export default DesktopContainer;

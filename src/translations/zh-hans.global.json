@@ -52,7 +52,7 @@
             "error": "账户的访问被拒绝，恢复账户失败。<br/>若要继续，需要在 Ledger 设备上授权每个账户的只读访问，请再重试。"
         },
         "PROMPT_TWO_FACTOR": {
-            "invalidCode": "无效的两步验证码，请重试。"
+            "invalidCode": "无效的双重认证验证码，请重试。"
         },
         "CHECK_ACCOUNT_AVAILABLE": {
             "success": "用户已找到。",
@@ -63,8 +63,8 @@
             "error": "公钥访问被拒绝，恢复账户失败。<br/>若要继续，需要允许 NEAR 钱包访问你的公钥，请再重试。"
         },
         "VERIFY_TWO_FACTOR": {
-            "success": "两步验证设置成功！",
-            "error": "两步验证设置失败，请重试。"
+            "success": "双重认证设置成功！",
+            "error": "双重认证设置失败，请重试。"
         },
         "CHECK_IS_NEW": {
             "success": "恭喜! ${accountId} 可被注册。",
@@ -85,6 +85,7 @@
         "Deserialization": "",
         "RetriesExceeded": "此交易超出最大重试次数。",
         "U2F_4": "无法通过硬件钱包登录：U2F DEVICE_INELIGIBLE。请确保 Ledger 设备已连接并解锁。",
+        "NotEnoughBalance": "你的账户没有足够余额进行此操作。",
 
         "default": {
             "success": "",
@@ -133,6 +134,9 @@
         },
         "setupRecoveryMessageNewAccount": {
             "invalidCode": "无效验证码"
+        },
+        "sendFungibleToken": {
+            "error": "发生错误，发送交易取消。"
         }
     },
     "account": {
@@ -160,10 +164,21 @@
             "implicitAccount": "转账不可逆，请确保账户 ID 准确",
             "implicitAccountModal": "请再确认账户 ID，如果账户输入错误，你的资产将永久无法找回。"
         },
+        "activateAccount": {
+            "pre": {
+                "title": "即将完成注册！请为账户进行首次充值。",
+                "desc": "开始使用 NEAR 钱包前，请先充值<b>至少 ${amount}</b> 至你的账户（或称地址）。"
+            },
+            "post": {
+                "title": "你的账户已经激活。",
+                "descOne": "你的初始充值已经收到，并且转至新的账户，新账户已经激活！",
+                "descTwo": "一部分充值被保留用于涵盖<a href='https://docs.near.org/docs/concepts/account' rel='noopener noreferrer' target='_blank'>账户的存储成本</a>。"
+            }
+        },
         "createImplicit": {
             "pre": {
                 "title": "充值至账户",
-                "descOne": "为初始化账户，请向临时充值地址转账至少 <b>${amount} NEAR</b>。",
+                "descOne": "为初始化账户，请向临时充值地址转账至少 <b>${amount}</b>。",
                 "descTwo": "充值完成后，请返回本页继续完成账户创建。",
                 "addressHeader": "临时充值地址",
                 "whereToBuy": {
@@ -171,18 +186,20 @@
                     "title": "购买 NEAR 通证",
                     "desc": "NEAR 通证可以在以下交易所购买"
                 },
-                "alertBanner": {
-                    "title": "请勿关闭此窗口！"
-                },
-                "fundWith": "打开"
+                "moonPay": {
+                    "title": "通过 MoonPay 充值",
+                    "desc": "通过 MoonPay 支持的支付方式进行你的首次充值。",
+                    "buyWith": "打开"
+                }
             },
             "post": {
+                "title": "认领你的账户",
+                "descOne": "你的初始充值已经收到，一旦认领，你的充值会转移到新认领的账户。",
+                "descTwo": "重要：你的单次充值地址将不再有效。请确认用新的账户 ID 替换旧地址，以防资产丢失。",
                 "modal": {
-                    "title": "账户已充值",
-                    "descOne": "你的账户已成功充值。",
-                    "descTwo": "临时充值地址现已无效，请不要向此地址转账。你现在可以使用账户 ID 作为你的 NEAR 主要地址。",
-                    "descThree": "你的账户 ID：<b>${accountId}</b>是你所有 NEAR 操作的单一地址。",
-                    "checkbox": "我已知晓：继续后，临时充值地址将会永久失效，任何转账的资产将无法找回。"
+                    "title": "更新你的地址",
+                    "descOne": "点击确认，意味着你已经知晓单次充值地址将会无效，任何充值到旧地址的资产会丢失。",
+                    "descTwo": "请记得在各个交易所或钱包内用新的账户 ID 替换旧地址。"
                 }
             },
             "success": {
@@ -192,6 +209,16 @@
                 "descThree": "请在交易所或其他设备上更新你的地址。",
                 "button": "前往账户页"
             }
+        },
+        "fundedStatus": {
+            "singleUse": "单次充值地址",
+            "nearName": "账户 ID",
+            "status": "账户状态",
+            "minDeposit": "最低充值",
+            "initialDeposit": "初始充值",
+            "awaitingDeposit": "等待充值",
+            "ready": "可供领取",
+            "active": "活跃"
         },
         "verifySeedPhrase": {
             "error": "你输入了错误的助记词"
@@ -363,20 +390,20 @@
     },
 
     "twoFactor": {
-        "enable": "开启两步验证",
-        "subHeader": "两步验证将为你的账户提供额外的安全保护。开启两步验证后，所有交易操作必须通过短信或 Email 确认。",
+        "enable": "开启双重认证",
+        "subHeader": "双重认证将为你的账户提供额外的安全保护。开启双重认证后，所有交易操作必须通过短信或 Email 确认。",
         "select": "选择验证方式",
-        "title": "两步验证",
-        "desc": "通过两步验证保护你的账户，在授权交易时必须通过短信或 Email 确认。",
+        "title": "双重认证",
+        "desc": "通过双重认证保护你的账户，在授权交易时必须通过短信或 Email 确认。",
         "email": "Email 地址",
         "phone": "手机号",
-        "notEnabled": "两步验证未开启",
-        "notEnoughBalance": "为开启两步验证，你的账户需要最少余额 ",
+        "notEnabled": "双重认证未开启",
+        "notEnoughBalance": "为开启双重认证，你的账户需要最少余额 ${amount}",
         "active": "已开启",
         "since": "自",
-        "promptDesc": "我们强烈建议你开启两步验证的方式来增强你的账户和资产安全性。",
+        "promptDesc": "我们强烈建议你开启双重认证的方式来增强你的账户和资产安全性。",
         "verify": {
-            "title": "输入两步验证码",
+            "title": "输入双重认证验证码",
             "desc": "一组 6 位验证代码已经发送至：",
             "inputLabel": "输入你的 6 位验证码",
             "placeholder": "验证码",
@@ -386,16 +413,16 @@
             "resent": "验证码已发送！"
         },
         "disable": {
-            "title": "是否确认禁用两步验证？",
-            "desc": "禁用两步验证后，交易将不再要求两步验证确认。",
-            "disable": "禁用两步验证",
-            "keep": "不，保留两步验证"
+            "title": "是否确认禁用双重认证？",
+            "desc": "禁用双重认证后，交易将不再要求双重认证确认。",
+            "disable": "禁用双重认证",
+            "keep": "不，保留双重认证"
         },
         "alertBanner": {
-            "title": "开启两步验证后，<b>${data} NEAR</b> 将会被锁定，以涵盖存储的消耗。",
+            "title": "开启双重认证后，<b>${data}</b> 将会被锁定，以涵盖存储的消耗。",
             "button": "了解更多"
         },
-        "checkBox": "我已知晓：开启两步验证后，${amount} NEAR 将会被锁定，以涵盖合约的存储。"
+        "checkBox": "我已知晓：开启双重认证后，${amount} 将会被锁定，以涵盖合约的存储。"
     },
 
     "fullAccessKeys": {
@@ -442,6 +469,8 @@
         "copyPhrase": "复制助记词",
         "copyImplicitAddress": "复制账户 ID",
         "claimAccount": "认领账户",
+        "claimMyAccount": "认领我的账户",
+        "continueToMyAccount": "前往我的账户",
         "continue": "继续",
         "continueSetup": "继续设置",
         "verify": "验证并完成",
@@ -450,6 +479,7 @@
         "startOver": "重新开始",
         "copyUrl": "复制链接",
         "createAccount": "创建账户",
+        "reserveMyAccountId": "保留账户 ID",
         "recoverYourAccount": "恢复账户",
         "importExistingAccount": "导入已有账户",
         "enable": "启用",
@@ -458,6 +488,7 @@
         "connectLedger": "绑定 Ledger",
         "connect": "连接",
         "retry": "重试",
+        "tryAgain": "再次尝试",
         "browseApps": "浏览应用",
         "createAccountCapital": "创建账户",
         "findMyAccount": "查找我的账户",
@@ -497,6 +528,7 @@
         "enabling": "正在开启",
         "disabling": "正在禁用",
         "verifying": "正在验证",
+        "creatingAccount": "创建账户",
         "staking": "正在质押",
         "unstaking": "正在赎回质押",
         "withdrawing": "正在提现",
@@ -508,7 +540,10 @@
         "viewOnExplorer": "通过浏览器查看",
         "buy": "购买",
         "learnMore": "了解更多",
-        "viewFAQ": "查看常见问题"
+        "viewFAQ": "查看常见问题",
+        "acceptAndContinue": "接受并继续",
+        "useMax": "最多",
+        "loading": "正在加载"
     },
 
     "link": {
@@ -525,6 +560,7 @@
     },
 
     "copy": {
+        "title": "复制",
         "default": "已复制！"
     },
 
@@ -536,6 +572,7 @@
         "accountId": {
             "title": "账户 ID",
             "placeholder": "例如：johndoe.near",
+            "placeHolderAlt": "账户 ID",
             "subLabel": "你的账户 ID 必须是顶级账户（如 <b>.near</b>）或 64 位字符的地址。"
         }
     },
@@ -566,13 +603,26 @@
         "cannotResend": "此消息是在开启 Email/手机号恢复时发送。我们只发送一次，并且无法重新发送。"
     },
 
+    "importAccount": {
+        "withId": "导入账户：${accountId}",
+        "noId": "正在导入账户",
+        "withIdFailed": "导入账户失败：${accountId}",
+        "noIdFailed": "导入账户失败。"
+    },
+
     "createAccount": {
+        "termsPage": {
+            "title": "在开始之前...",
+            "descOne": "NEAR 账户要求进行一笔一次性<b>至少 ${amount}</b> 的充值来涵盖<a href='https://docs.near.org/docs/concepts/account' rel='noopener noreferrer' target='_blank'>你的账户存储成本</a>。",
+            "descTwo": "在保留你的个性化账户 ID 之后，你需要进行一笔初始充值来激活的账户。",
+            "disclaimer": "通过注册 NEAR 账户，意味着你同意 NEAR 钱包的<a href='/terms' rel='noopener noreferrer' target='_blank'>服务条款</a>和<a href='https://near.org/privacy' rel='noopener noreferrer' target='_blank'>隐私策略</a>。"
+        },
         "pageTitle": "创建新的账户",
         "pageText": "只需要输入用户名即完成注册。",
         "step": "步骤 ${step}/${total}",
         "accountIdInput": {
             "title": "输入用户名",
-            "placeholder": "例如：satoshi"
+            "placeholder": "yourname.${data}"
         },
         "alreadyHaveAnAccount": "已经拥有账户？",
         "recoverItHere": "恢复账户",
@@ -582,7 +632,9 @@
             "digits": "数字 (0-9)",
             "separators": "字符 (_-) 用于分割",
             "cannotContain": "你的用户名不可以包括：",
-            "characters": "符号 \"@\" 或 \".\""
+            "characters": "符号 \"@\" 或 \".\"",
+            "minCharacters": "少于 2 个字符",
+            "maxCharacters": "超过 64 个字符（包括 .${accountSuffix}）"
         },
         "invalidLinkDrop": {
             "title": "链接无效",
@@ -614,7 +666,7 @@
     "linkdropLanding": {
         "title": "你收到了 NEAR 空投！",
         "desc": "你可以登录已有的账户领取，或创建新的账户领取。",
-        "ctaAccount": "登录已有账户并领取",
+        "ctaAccount": "用已登录的账户领取",
         "ctaLogin": "登录并领取",
         "ctaNew": "注册新账户并领取",
         "or": "或",
@@ -645,15 +697,18 @@
         "basicSecurity": "基础安全",
         "basicSecurityDesc": "请输入你的 Email 地址或手机号以获取恢复链接",
         "emailTitle": "Email 方式",
+        "emailDesc": "通过 Email 方式接收验证码和账户恢复链接。",
         "emailPlaceholder": "example@email.com",
         "phoneTitle": "手机短信方式",
-        "phoneDesc": "请输入你的手机号以获取恢复链接",
+        "phoneDesc": "请输入你的手机号以接收恢复链接。",
         "phonePlaceholder": "+1 415 797 8554",
-        "notSupportedPhone": "抱歉，目前我们还为你所在的地区开放短信恢复方式。请选择 Email 方式。",
+        "notSupportedPhone": "抱歉，目前我们暂未对你所在的地区开放短信恢复方式。请选择 Email 方式。",
         "advancedSecurity": "高级安全",
         "advancedSecurityDesc": "记录 12 个单词组成的助记词，并安全保存。",
-        "ledgerTitle": "Ledger Nano S/X",
-        "phraseTitle": "恢复助记词"
+        "ledgerTitle": "Ledger 硬件钱包",
+        "ledgerDesc": "通过 Ledger 硬件钱包保护你的账户安全。",
+        "phraseTitle": "安全助记词",
+        "phraseDesc": "生成并安全地存储唯一的助记词。"
     },
     "setRecoveryConfirm": {
         "title": "输入验证码",
@@ -661,10 +716,11 @@
         "inputHeader": "输入 6 位验证码",
         "inputError": "请输入验证码。",
         "inputPlaceholder": "验证码",
-        "didNotRecive": "未收到验证码？",
+        "didNotReceive": "未收到验证码？",
         "resendCode": "重新发送",
+        "resending": "正在重新发送...",
         "or": "或",
-        "sendToDifferent": "发送至其他 Email 邮箱",
+        "sendToDifferent": "发送至其他",
         "email": "Email",
         "phone": "手机号",
         "reenter": {
@@ -696,10 +752,13 @@
     },
 
     "dashboard": {
-        "activity": "动态"
+        "activity": "最近动态"
     },
 
     "loading": "加载中...",
+    "loadingNoDots": "加载中",
+    "sync": "刷新",
+    "getBalance": "查看余额",
 
     "balance": {
         "balance": "总余额",
@@ -707,11 +766,19 @@
     },
 
     "wallet": {
-        "balanceTitle": "总资产",
+        "balanceTitle": "NEAR 余额",
+        "totalBalanceTitle": "NEAR 总余额",
         "tokens": "通证",
         "balance": "余额",
+        "totalBalance": "余额",
         "dateAndTime": "日期和时间",
-        "status": "状态"
+        "status": "状态",
+        "balances": "余额",
+        "collectibles": "收藏品"
+    },
+
+    "tokenBox": {
+        "priceUnavailable": "无法获取价格"
     },
 
     "buyNear": {
@@ -725,6 +792,11 @@
         "coinMarketCap": "CoinMarketCap"
     },
     
+    "NFTs": {
+        "emptyState": "似乎你还没有收藏品。",
+        "loadMore": "加载更多"
+    },
+
     "exploreApps": {
         "title": "寻找 NEAR 生态和应用？",
         "desc": "赚取、铸币和玩游戏！发现 NEAR 生态的应用。",
@@ -843,7 +915,7 @@
                     "title": "无法显示奖励金额。",
                     "cta": "了解更多",
                     "modalTitle": "无法显示质押奖励的金额",
-                    "modalDescOne": "当两步验证开启时，我们当前无法计算奖励。我们预计会在将来支持此功能。",
+                    "modalDescOne": "当双重认证开启时，我们当前无法计算奖励。我们预计会在将来支持此功能。",
                     "modalDescTwo": "此时，你可以在「总质押数」中看到你的奖励累计，这个总数包括了奖励，并会随着质押而逐步增加。"
                 }
             },
@@ -909,7 +981,7 @@
         },
         "unstakeSuccess": {
             "title": "成功！",
-            "desc": "你质押的 <b>${amount} NEAR</b> 已经成功从验证节点的质押池释放：",
+            "desc": "你质押的 <b>${amount}</b> 已经成功从验证节点的质押池释放：",
             "descTwo": "你的通证请求释放将会在 36 - 48 小时释放。",
             "button": "返回质押页"
         },
@@ -957,7 +1029,7 @@
     },
     "profile": {
         "lockupBanner": {
-            "title": "你有 <b>${amount}</b> NEAR 可从你的锁定账户提现。",
+            "title": "你有 <b>${amount}</b> 可从你的锁定账户提现。",
             "cta": "转账至钱包"
         },
         "pageTitle": {
@@ -993,7 +1065,7 @@
             "lessSecure": "备选方式",
             "lessSecureDesc": "推荐余额较小的账户使用这些恢复方式，非常方便。但如果手机或邮箱被盗，你的资产将会有风险。"
         },
-        "twoFactor": "两步验证方式",
+        "twoFactor": "双重认证方式",
         "twoFactorDesc": "登录或转账时，将通过短信或 Email 方式授权。",
         "details": {
             "profile": "资料",
@@ -1054,6 +1126,56 @@
         "banner": {
             "useMax": "${data} NEAR 已经为交易费而预留。",
             "insufficient": "你将转账所有的可用余额，请至少保留 <b>${data} NEAR</b> 来保证交易费。"
+        }
+    },
+    "sendV2": {
+        "TXEntry": {
+            "title": {
+                "token": "资产",
+                "estimatedFees": "预估费用",
+                "estimatedTotal": "预估总计",
+                "status": "状态",
+                "amount": "数量",
+                "networkFees": "网络费用",
+                "receiverId": "发送至",
+                "timeStamp": "日期和时间",
+                "reservedForFees": "保留费用",
+                "availableBalance": "可用余额",
+                "availableToSend": "可转账余额",
+                "from": "来自",
+                "to": "至"
+            },
+            "status": {
+                "SuccessValue": "成功",
+                "Failure": "失败",
+                "notAvailable": "状态不可用"
+            }
+        },
+        "accordionTriggerTitle": {
+            "balanceDetails": "余额详情",
+            "transactionDetails": "交易详情"
+        },
+        "selectTokenButtonTitle": "选择资产",
+        "selectAsset": {
+            "title": "选择资产",
+            "assetInputPlaceholder": "搜索资产名称",
+            "assetListNameTitle": "名称",
+            "asssetListBalanceTitle": "可转账余额"
+        },
+        "selectReceiver": {
+            "receiverInputLabel": "发送至"
+        },
+        "review": {
+            "title": "你正在发送"
+        },
+        "success": {
+            "title": "交易完成</br>你发送了 <span class='color-blue'>${amount}</span></br>至 <span class='color-green'>${receiverId}</span>"
+        },
+        "translateIdInfoTooltip": {
+            "estimatedFees": "处理这笔交易的预估费用。",
+            "estimatedTotal": "这笔交易的预估总数，包括费用。",
+            "reservedForFees": "你账户余额中保留的部分，这部分涵盖了存储消耗成本。更多信息请访问 NEAR 文档。",
+            "networkFees": "涵盖了处理这笔交易的最终数额。"
         }
     },
 
@@ -1219,8 +1341,8 @@
         "desc": "注意：这是预发布版本 NEAR 钱包，可能有 Bugs，这些 Bugs 可能会导致丢失通证。继续使用此版本则表示你理解并接受此风险，并知晓 NEAR 钱包团队将无法帮助你。"
     },
     "landing": {
-        "title": "NEAR 已来临。",
-        "desc": "使用 <span>NEAR 钱包</span>安全地存储并质押你的 NEAR 和其他通证。",
+        "title": "NEAR 数字钱包",
+        "desc": "使用 <span>NEAR 钱包</span>安全地存储、使用您的资产。",
         "or": "或",
         "banner": "NEAR 钱包已经在内测"
     },

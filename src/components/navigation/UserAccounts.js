@@ -1,11 +1,11 @@
-import React from 'react'
-import styled from 'styled-components'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import styled from 'styled-components';
 
-import Balance from '../common/Balance'
+import { actionsPending } from '../../utils/alerts';
+import classNames from '../../utils/classNames';
+import Balance from '../common/balance/Balance';
 import SkeletonLoading from '../common/SkeletonLoading';
-import classNames from '../../utils/classNames'
-import { Translate } from 'react-localize-redux'
-import { actionsPending } from '../../utils/alerts'
 
 const Wrapper = styled.div`
     .animation-wrapper > .animation {
@@ -13,29 +13,27 @@ const Wrapper = styled.div`
     }
 
     @media (min-width: 992px) {
-        display: flex;
-        flex-direction: column;
-        max-height: 228px;
+        max-height: 260px;
         overflow-y: auto;
 
         ::-webkit-scrollbar {
             display: none;
         }
     }
-`
+`;
 
 const Account = styled.div`
     align-items: center;
     border-radius: 8px;
     display: flex;
     justify-content: space-between;
-    text-overflow: ellipsis;
     color: #72727A;
     margin-bottom: 4px;
+    padding: 16px;
     cursor: pointer;
     font-weight: 500;
     position: relative;
-    
+
     .symbol {
         transform: scale(0.65);
         font-weight: 700;
@@ -66,37 +64,35 @@ const Account = styled.div`
     }
 
     .account-data {
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        padding: 16px 0 16px 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-right: 8px;
+
+      .accountId {
+        white-space: nowrap;
         overflow: hidden;
-        margin-right: 5px;
-
-        .accountId {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-    }
-    .sync {
-        padding: 0 16px 0 0;
+        text-overflow: ellipsis;
+      }
     }
 
-    .balance {
+    .balance-wrapper {
       font-weight: 400;
+      line-height: normal;
+      margin-top: 2px;
     }
-`
+`;
 
 const SyncButton = styled.span`
     background-color: #f8f8f8;
     border-radius: 50px;
-    border: 2px solid #f8f8f8;
     color: #0072ce;
     font-size: 12px;
     font-weight: 500;
     padding: 4px 8px;
     cursor: pointer;
+    flex-basis: content;
+    flex-shrink: 0;
 
     :hover, :active {
         background-color: #F0F0F1;
@@ -138,15 +134,18 @@ const SyncButton = styled.span`
             }
         }
     }
-`
+`;
 
-const UserAccounts = ({ accounts, accountId, accountIdLocalStorage, selectAccount, accountsBalance, balance, refreshBalance, getBalance }) => (
+const UserAccounts = ({ accounts, accountId, accountIdLocalStorage, handleSelectAccount, accountsBalance, balance, refreshBalance, getBalance }) => (
     <Wrapper>
         <UserAccount
             accountId={accountId || accountIdLocalStorage}
             balance={actionsPending('GET_BALANCE') ? '' : balance?.total}
             balanceLoading={actionsPending('GET_BALANCE')}
-            refreshBalance={() => (getBalance(), refreshBalance(accountId))}
+            refreshBalance={() => {
+                getBalance();
+                refreshBalance(accountId);
+            }}
             active={true}
         />
         {accountId
@@ -158,7 +157,7 @@ const UserAccounts = ({ accounts, accountId, accountIdLocalStorage, selectAccoun
                     balanceLoading={accountsBalance && accountsBalance[account]?.loading}
                     refreshBalance={() => refreshBalance(account)}
                     active={false}
-                    onClick={() => selectAccount(account)}
+                    onClick={() => handleSelectAccount(account)}
                 />
             )) : <SkeletonLoading
                 height='55px'
@@ -166,7 +165,7 @@ const UserAccounts = ({ accounts, accountId, accountIdLocalStorage, selectAccoun
             />
         }
     </Wrapper>
-)
+);
 
 const UserAccount = ({ accountId, balance, balanceLoading, refreshBalance, active, onClick }) => (
     <Account className={active ? 'active-account' : 'additional-account'}>
@@ -174,28 +173,26 @@ const UserAccount = ({ accountId, balance, balanceLoading, refreshBalance, activ
             <div className='accountId'>
                 {accountId}
             </div>
-            <div className='balance'>
+            <div className='balance-wrapper'>
                 {!balance && !balanceLoading
-                    ? <div className='symbol'>Ⓝ</div>
-                    : <Balance amount={balance} />
+                    ? <div>— USD</div>
+                    : <Balance amount={balance} showBalanceInNEAR={false} showAlmostEqualSignUSD={false}/>
                 }
             </div>
         </div>
-        <div className='sync'>
-            <SyncButton 
-                className={classNames([{'dots': balanceLoading}])}
-                onClick={refreshBalance}
-                title='Sync balance'
-            >
-                {balance
-                    ? <Translate id='sync'/>
-                    : !balanceLoading
-                        ? <Translate id='getBalance'/>
-                        : ''
-                }
-            </SyncButton>
-        </div>
+        <SyncButton
+            className={classNames([{'dots': balanceLoading}])}
+            onClick={refreshBalance}
+            title='Sync balance'
+        >
+            {balance
+                ? <Translate id='sync'/>
+                : !balanceLoading
+                    ? <Translate id='getBalance'/>
+                    : ''
+            }
+        </SyncButton>
     </Account>
-)
+);
 
-export default UserAccounts
+export default UserAccounts;

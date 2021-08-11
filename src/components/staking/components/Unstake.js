@@ -1,8 +1,9 @@
-import React from 'react'
-import { Translate } from 'react-localize-redux'
-import ListWrapper from './ListWrapper'
-import ValidatorBox from './ValidatorBox'
-import BN from 'bn.js'
+import BN from 'bn.js';
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+
+import ListWrapper from './ListWrapper';
+import ValidatorBox from './ValidatorBox';
 
 export default function Unstake({ currentValidators }) {
 
@@ -18,9 +19,10 @@ export default function Unstake({ currentValidators }) {
                         validator={validator}
                         amount={validator.staked}
                         stakeAction='unstake'
+                        showBalanceInUSD={false}
                     />
                 )}
             </ListWrapper>
         </>
-    )
+    );
 }

@@ -1,14 +1,11 @@
-import React from 'react'
+import React from 'react';
+import { List, Image } from 'semantic-ui-react';
+import styled from 'styled-components';
 
-import AccessKeysDeauthorize from '../access-keys/AccessKeysDeauthorize'
-
-import { List, Image } from 'semantic-ui-react'
-
-import CloseImage from '../../images/icon-close.svg'
-import MTransactionImage from '../../images/icon-m-transaction.svg'
-import CheckBlueImage from '../../images/icon-check-blue.svg'
-
-import styled from 'styled-components'
+import CheckBlueImage from '../../images/icon-check-blue.svg';
+import CloseImage from '../../images/icon-close.svg';
+import MTransactionImage from '../../images/icon-m-transaction.svg';
+import AccessKeysDeauthorize from '../access-keys/AccessKeysDeauthorize';
 
 const CustomList = styled(List)`
     &&& {
@@ -79,8 +76,9 @@ const CustomList = styled(List)`
                         background-size: 12px auto;
                     }
                     .row {
+                        height: 40px;
                         margin: 0 0 0 24px;
-                        padding: 12px 0 0 32px !important;
+                        padding: 18px 0 0 32px !important;
                         background: url(${CheckBlueImage}) no-repeat left 14px;
                     }
                     .row:last-child {
@@ -207,7 +205,7 @@ const CustomList = styled(List)`
             }
         }
     }
-`
+`;
 
 const PaginationShowSubBox = ({ 
     toggleCloseSub,
@@ -247,6 +245,6 @@ const PaginationShowSubBox = ({
             }
         </List.Item>
     </CustomList>
-)
+);
 
-export default PaginationShowSubBox
+export default PaginationShowSubBox;

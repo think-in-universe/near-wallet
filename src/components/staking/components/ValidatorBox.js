@@ -1,13 +1,14 @@
-import React from 'react'
-import styled from 'styled-components'
-import UserIcon from '../../svg/UserIcon'
-import ChevronIcon from '../../svg/ChevronIcon'
-import FormButton from '../../common/FormButton'
-import { Translate } from 'react-localize-redux'
-import Balance from '../../common/Balance'
-import { redirectTo } from '../../../actions/account'
-import { useDispatch } from 'react-redux'
-import { Mixpanel } from '../../../mixpanel/index'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
+
+import { redirectTo } from '../../../actions/account';
+import { Mixpanel } from '../../../mixpanel/index';
+import Balance from '../../common/balance/Balance';
+import FormButton from '../../common/FormButton';
+import ChevronIcon from '../../svg/ChevronIcon';
+import UserIcon from '../../svg/UserIcon';
 
 const Container = styled.div`
     display: flex;
@@ -68,15 +69,15 @@ const Container = styled.div`
         margin-left: auto;
         text-align: right;
 
-        div {
-            &:first-of-type {
+        > div {
+            :first-of-type {
                 color: #00C08B;
             }
-            
-            &:last-of-type {
-                color: #24272a;
-                white-space: nowrap;
-            }
+        }
+
+        .amount {
+            color: #24272a;
+            white-space: nowrap;
         }
     }
 
@@ -117,7 +118,7 @@ const Container = styled.div`
     .text-left {
         text-align: left;
     }
-`
+`;
 
 export default function ValidatorBox({
     validator,
@@ -126,20 +127,21 @@ export default function ValidatorBox({
     clickable = true,
     style,
     label = false,
-    stakeAction
+    stakeAction,
+    showBalanceInUSD
 }) {
-    const dispatch = useDispatch()
-    const { accountId: validatorId, active } = validator
+    const dispatch = useDispatch();
+    const { accountId: validatorId, active } = validator;
 
-    const fee = validator.fee && validator.fee.percentage
-    const cta = amount ? <ChevronIcon/> : <FormButton className='gray-blue' linkTo={`/staking/${validatorId}`}><Translate id='staking.validatorBox.cta' /></FormButton>
+    const fee = validator.fee && validator.fee.percentage;
+    const cta = amount ? <ChevronIcon/> : <FormButton className='gray-blue' linkTo={`/staking/${validatorId}`}><Translate id='staking.validatorBox.cta' /></FormButton>;
 
     const handleClick = () => {
-        Mixpanel.track("STAKE Go to staked account page")
+        Mixpanel.track("STAKE Go to staked account page");
         if (clickable && amount) {
-            dispatch(redirectTo(`/staking/${validatorId}${stakeAction ? `/${stakeAction}` : ``}`))
+            dispatch(redirectTo(`/staking/${validatorId}${stakeAction ? `/${stakeAction}` : ``}`));
         }
-    }
+    };
 
     return (
         <Container 
@@ -169,12 +171,12 @@ export default function ValidatorBox({
             {amount &&
                 <div className='right'>
                     {staking && <div><Translate id='staking.validatorBox.staking' /></div>}
-                    <div>
-                        <Balance amount={amount} symbol='near'/>
+                    <div className='amount'>
+                        <Balance amount={amount} showBalanceInUSD={showBalanceInUSD}/>
                     </div>
                 </div>
             }
             {clickable ? cta : null}
         </Container>
-    )
+    );
 }

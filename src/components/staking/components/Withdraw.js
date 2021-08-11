@@ -1,7 +1,8 @@
-import React from 'react'
-import { Translate } from 'react-localize-redux'
-import ListWrapper from './ListWrapper'
-import ValidatorBox from './ValidatorBox'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+
+import ListWrapper from './ListWrapper';
+import ValidatorBox from './ValidatorBox';
 
 export default function Withdraw({ currentValidators }) {
 
@@ -16,9 +17,10 @@ export default function Withdraw({ currentValidators }) {
                         key={i}
                         validator={validator}
                         amount={validator.available}
+                        showBalanceInUSD={false}
                     />
                 )}
             </ListWrapper>
         </>
-    )
+    );
 }

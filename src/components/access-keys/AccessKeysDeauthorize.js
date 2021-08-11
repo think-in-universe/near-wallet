@@ -1,10 +1,10 @@
-import React from 'react'
-import { Translate } from 'react-localize-redux'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
 
-import MainImage from '../common/MainImage'
-import Balance from '../common/Balance'
-import AccessKeysDeauthorizeConfirm from './AccessKeysDeauthorizeConfirm'
-import FormButton from '../common/FormButton'
+import Balance from '../common/balance/Balance';
+import FormButton from '../common/FormButton';
+import MainImage from '../common/MainImage';
+import AccessKeysDeauthorizeConfirm from './AccessKeysDeauthorizeConfirm';
 
 const AccessKeysDeauthorize = ({
     showSubData, 
@@ -38,7 +38,7 @@ const AccessKeysDeauthorize = ({
                                 </h2>
                                 <h5 className='color-blue'>
                                     <span className='color-black'><Translate id='amount' />: </span>
-                                    <Balance amount={showSubData.access_key.permission.FunctionCall.allowance} />
+                                    <Balance amount={showSubData.access_key.permission.FunctionCall.allowance} showBalanceInUSD={false}/>
                                 </h5>
                             </>
                             : null
@@ -93,6 +93,6 @@ const AccessKeysDeauthorize = ({
             </div>
         </div>
     </div>
-)
+);
 
-export default AccessKeysDeauthorize
+export default AccessKeysDeauthorize;

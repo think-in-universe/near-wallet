@@ -1,7 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import Balance from '../../common/Balance'
-import { Translate } from 'react-localize-redux'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import styled from 'styled-components';
+
+import Balance from '../../common/balance/Balance';
 
 const Container = styled.div`
     border: 2px solid #F0F0F0;
@@ -40,10 +41,11 @@ const Container = styled.div`
             :last-of-type {
                 color: #272729;
                 font-weight: 600;
+                text-align: right;
             }
         }
     }
-`
+`;
 
 const AuthorizedApp = ({ app }) => {
     return (
@@ -53,10 +55,10 @@ const AuthorizedApp = ({ app }) => {
             <hr/>
             <div className='fee'>
                 <span><Translate id='authorizedApps.feeAllowance' /></span>
-                <span><Balance amount={app.access_key.permission.FunctionCall.allowance} symbol='near'/></span>
+                <span><Balance amount={app.access_key.permission.FunctionCall.allowance} showBalanceInUSD={false}/></span>
             </div>
         </Container>
-    )
-}
+    );
+};
 
-export default AuthorizedApp
+export default AuthorizedApp;

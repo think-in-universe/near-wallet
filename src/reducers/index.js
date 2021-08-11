@@ -1,17 +1,20 @@
-import { combineReducers } from 'redux'
-import { connectRouter } from 'connected-react-router'
+import { connectRouter } from 'connected-react-router';
 import { localizeReducer } from 'react-localize-redux';
+import { combineReducers } from 'redux';
 
-import allAccounts from '../reducers/allAccounts'
-import availableAccounts from './available-accounts'
-import account from './account'
-import transactions from './transactions'
-import sign from './sign'
-import recoveryMethods from '../reducers/recoveryMethods'
-import ledger from './ledger'
-import staking from './staking'
-import status from './status'
-import flowLimitation from './flowLimitation'
+import allAccounts from '../reducers/allAccounts';
+import recoveryMethods from '../reducers/recoveryMethods';
+import tokenFiatValuesSlice from '../slices/tokenFiatValues';
+import account from './account';
+import availableAccounts from './available-accounts';
+import flowLimitation from './flowLimitation';
+import ledger from './ledger';
+import nftSlice from './nft';
+import sign from './sign';
+import staking from './staking';
+import status from './status';
+import tokens from './tokens';
+import transactions from './transactions';
 
 export default (history) => combineReducers({
     localize: localizeReducer,
@@ -25,5 +28,8 @@ export default (history) => combineReducers({
     staking,
     status,
     flowLimitation,
+    tokens,
+    [nftSlice.name]: nftSlice.reducer,
+    [tokenFiatValuesSlice.name]: tokenFiatValuesSlice.reducer,
     router: connectRouter(history)
-})
+});

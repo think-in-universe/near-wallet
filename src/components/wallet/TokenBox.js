@@ -1,32 +1,38 @@
-import React from 'react'
-import styled from 'styled-components'
-import DefaultTokenIcon from '../svg/DefaultTokenIcon'
-import { EXPLORER_URL } from '../../utils/wallet'
-import TokenAmount from './TokenAmount'
-import isDataURL from '../../utils/isDataURL'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import styled from 'styled-components';
+
+import { EXPLORER_URL } from '../../utils/wallet';
+import Balance from '../common/balance/Balance';
+import TokenIcon from '../send/components/TokenIcon';
+import TokenAmount from './TokenAmount';
 
 const StyledContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 15px 14px;
+    min-height: 80px;
 
     @media (max-width: 767px) {
         margin: 0 -14px;
     }
 
     @media (min-width: 992px) {
-        margin: 0 -20px;
         padding: 15px 20px;
     }
 
-    .symbol {
-        width: 33px;
-        height: 33px;
+    .icon {
+        width: 32px;
+        height: 32px;
+        min-width: 32px;
+        min-height: 32px;
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        border-radius: 50%;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
 
         img, svg {
             height: 32px;
@@ -39,34 +45,26 @@ const StyledContainer = styled.div`
         flex-direction: column;
         margin-left: 14px;
 
-        span {
-            :first-of-type {
-                font-weight: 700;
-                font-size: 16px;
-                color: #24272a;
+        .symbol {
+            font-weight: 700;
+            font-size: 16px;
+            color: #24272a;
+
+            a {
+                color: inherit;
             }
-            :last-of-type {
+        }
+
+        .fiat-rate {
+            color: #72727A;
+            margin-top: 5px;
+
+            > span {
+                background-color: #F0F0F1;
+                padding: 2px 10px;
+                border-radius: 40px;
                 font-size: 12px;
-                color: #72727A;
-                max-width: 350px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-
-                @media (max-width: 991px) {
-                    max-width: 250px;
-                }
-
-                @media (max-width: 500px) {
-                    max-width: 180px;
-                }
-
-                @media (max-width: 330px) {
-                    max-width: 150px;
-                }
-
-                a {
-                    color: inherit;
-                }
+                display: block;
             }
         }
     }
@@ -74,35 +72,97 @@ const StyledContainer = styled.div`
     .balance {
         margin-left: auto;
         font-size: 16px;
-        font-weight: 700;
+        font-weight: 600;
         color: #24272a;
-    }
-`
+        text-align: right;
+        min-height: 47px;
 
-const TokenBox = ({ token }) => {
-    return (
-        <StyledContainer className='token-box'>
-            <div className='symbol'>
-                {token.icon && isDataURL(token.icon) ?
-                    <img src={token.icon} alt={token.name}/>
-                    :
-                    <DefaultTokenIcon/>
+        .fiat-amount {
+            font-size: 14px;
+            font-weight: 400;
+            margin-top: 6px;
+            color: #72727A;
+            line-height: normal;
+        }
+
+        .dots {
+            :after {
+                position: absolute;
+                content: '.';
+                font-weight: 300;
+                animation: link 1s steps(5, end) infinite;
+            
+                @keyframes link {
+                    0%, 20% {
+                        color: rgba(0,0,0,0);
+                        text-shadow:
+                            .3em 0 0 rgba(0,0,0,0),
+                            .6em 0 0 rgba(0,0,0,0);
+                    }
+                    40% {
+                        color: #24272a;
+                        text-shadow:
+                            .3em 0 0 rgba(0,0,0,0),
+                            .6em 0 0 rgba(0,0,0,0);
+                    }
+                    60% {
+                        text-shadow:
+                            .3em 0 0 #24272a,
+                            .6em 0 0 rgba(0,0,0,0);
+                    }
+                    80%, 100% {
+                        text-shadow:
+                            .3em 0 0 #24272a,
+                            .6em 0 0 #24272a;
+                    }
                 }
+            }
+        }
+    }
+`;
+
+const TokenBox = ({ token, onClick }) => {
+    return (
+        <StyledContainer className='token-box' onClick={onClick ? () => onClick(token) : null}>
+            <div className='icon'>
+                <TokenIcon symbol={token.symbol} icon={token.icon}/>
             </div>
             <div className='desc'>
-                <span>{token.symbol}</span>
-                <span title={token.contract}>
-                    <a href={`${EXPLORER_URL}/accounts/${token.contract}`} target='_blank' rel='noopener noreferrer'>
-                        {token.contract}
-                    </a>
+                {token.contractName ?
+                    <span className='symbol' title={token.contractName}>
+                        <a 
+                            href={`${EXPLORER_URL}/accounts/${token.contractName}`}
+                            onClick={e => e.stopPropagation()}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                        >
+                            {token.symbol}
+                        </a>
+                    </span>
+                    :
+                    <span className='symbol'>
+                        {token.symbol}
+                    </span>
+                }
+                <span className='fiat-rate'>
+                    {token.usd
+                        ? <>${token.usd}</>
+                        : <span><Translate id='tokenBox.priceUnavailable' /></span>
+                    }
                 </span>
             </div>
-            <TokenAmount 
-                token={token} 
-                className='balance'
-            />
+            {token.symbol === 'NEAR' && !token.contractName ?
+                <div className='balance'>
+                    <Balance amount={token.balance} symbol={false}/>
+                </div>
+                :
+                <TokenAmount 
+                    token={token} 
+                    className='balance'
+                />
+            }
         </StyledContainer>
-    )
-}
+    );
+};
 
-export default TokenBox
+export default TokenBox;

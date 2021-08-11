@@ -1,10 +1,13 @@
-import React from 'react'
-import Modal from '../common/modal/Modal'
-import { Translate } from 'react-localize-redux'
-import styled from 'styled-components'
-import BinanceLogo from '../../images/binance-logo.svg'
-import HuobiLogo from '../../images/huobi-logo.svg'
-import OkexLogo from '../../images/okex-logo.svg'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import styled from 'styled-components';
+
+import BinanceLogo from '../../images/binance-logo.svg';
+import HuobiLogo from '../../images/huobi-logo.svg';
+import LiqualityLogo from '../../images/liquality-logo.svg';
+import OkCoinLogo from '../../images/ok-coin-logo.svg';
+import OkexLogo from '../../images/okex-logo.svg';
+import Modal from '../common/modal/Modal';
 
 const Container = styled.div`
     display: flex;
@@ -12,9 +15,10 @@ const Container = styled.div`
     align-items: center;
     padding: 40px 0 30px 0;
 
-    .sub-title {
-        color: #72727A;
-        font-size: 16px;
+    h2 {
+        color: #72727A !important;
+        font-size: 16px !important;
+        font-weight: 400 !important;
         line-height: 150%;
         text-align: center;
         margin: 20px 0 30px 0;
@@ -35,8 +39,12 @@ const Container = styled.div`
             border-color: #8FCDFF;
             background-color: #F0F9FF;
         }
+
+        img {
+            max-height: 35px;
+        }
     }
-`
+`;
 
 const WhereToBuyNearModal = ({ open, onClose }) => {
     return (
@@ -48,8 +56,8 @@ const WhereToBuyNearModal = ({ open, onClose }) => {
             modalSize='md'
         >
             <Container>
-                <h2><Translate id='account.createImplicit.pre.whereToBuy.title'/></h2>
-                <div className='sub-title'><Translate id='account.createImplicit.pre.whereToBuy.desc'/></div>
+                <h1><Translate id='account.createImplicit.pre.whereToBuy.title'/></h1>
+                <h2><Translate id='account.createImplicit.pre.whereToBuy.desc'/></h2>
                 <a href='https://www.binance.com/' target='_blank' rel='noreferrer'>
                     <img src={BinanceLogo} alt='BINANCE'/>
                 </a>
@@ -59,9 +67,15 @@ const WhereToBuyNearModal = ({ open, onClose }) => {
                 <a href='https://www.okex.com/' target='_blank' rel='noreferrer'>
                     <img src={OkexLogo} alt='OKEX'/>
                 </a>
+                <a href='https://liquality.io/' target='_blank' rel='noreferrer'>
+                    <img src={LiqualityLogo} alt='LIQUALITY'/>
+                </a>
+                <a href='https://www.okcoin.com/' target='_blank' rel='noreferrer'>
+                    <img src={OkCoinLogo} alt='OKCOIN'/>
+                </a>
             </Container>
         </Modal>
     );
-}
+};
 
-export default WhereToBuyNearModal
+export default WhereToBuyNearModal;

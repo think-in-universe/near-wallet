@@ -1,11 +1,12 @@
-import React from 'react'
-import styled from 'styled-components'
-import Balance from '../../common/Balance'
-import { Translate } from 'react-localize-redux'
-import FormButton from '../../common/FormButton'
-import classNames from '../../../utils/classNames'
-import BN from 'bn.js'
-import Tooltip from '../../common/Tooltip'
+import BN from 'bn.js';
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import styled from 'styled-components';
+
+import classNames from '../../../utils/classNames';
+import Balance from '../../common/balance/Balance';
+import FormButton from '../../common/FormButton';
+import Tooltip from '../../common/Tooltip';
 
 const Container = styled.div`
     border-bottom: 2px solid #F2F2F2;
@@ -16,7 +17,7 @@ const Container = styled.div`
         padding: 15px 14px;
     }
 
-    .list {
+    .balance {
         display: block;
         margin-top: 10px !important;
         color: #24272a;
@@ -63,7 +64,7 @@ const Container = styled.div`
         margin: 0px -14px 0 -14px;
         border-radius: 0;
     }
-`
+`;
 
 export default function BalanceBox({
     title,
@@ -83,7 +84,7 @@ export default function BalanceBox({
                     <Translate id={title} />
                     <Tooltip translate={info}/>
                 </div>
-                <Balance amount={amount} symbol='near'/>
+                <Balance amount={amount}/>
                 {disclaimer &&
                     <div className='withdrawal-disclaimer'>
                         <Translate id={disclaimer} />
@@ -94,5 +95,5 @@ export default function BalanceBox({
                 <FormButton disabled={new BN(amount).isZero() || loading} onClick={onClick} linkTo={linkTo} className={classNames(['small', buttonColor])}><Translate id={button} /></FormButton>
             }
         </Container>
-    )
+    );
 }

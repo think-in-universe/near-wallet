@@ -60,6 +60,22 @@ const Style = styled.div`
         position: relative;
         box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         margin: 14px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    &.mobile-action-sheet {
+        @media (max-width: 649px) {
+            .modal {
+                margin: 0;
+                margin-bottom: -15px;
+                border-radius: 14px;
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                position: fixed;
+                bottom: 0;
+            }
+        }
     }
 
     &.full-screen {
@@ -68,6 +84,8 @@ const Style = styled.div`
             border-radius: 0;
             overflow-y: auto;
             overflow-x: hidden;
+            position: fixed;
+            max-height: initial;
 
             ::-webkit-scrollbar {
                 display: none;

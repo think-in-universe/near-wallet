@@ -1,12 +1,13 @@
-import React from 'react'
-import styled from 'styled-components'
-import AccountId from './AccountId'
-import Balance from '../../common/Balance'
-import Accordion from '../../common/Accordion'
-import ClickToCopy from '../../common/ClickToCopy'
-import { Translate } from 'react-localize-redux'
-import ChevronIcon from '../../svg/ChevronIcon'
-import Tooltip from '../../common/Tooltip'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import styled from 'styled-components';
+
+import Accordion from '../../common/Accordion';
+import Balance from '../../common/balance/Balance';
+import ClickToCopy from '../../common/ClickToCopy';
+import Tooltip from '../../common/Tooltip';
+import ChevronIcon from '../../svg/ChevronIcon';
+import AccountId from './AccountId';
 
 const Container = styled.div`
 
@@ -54,6 +55,10 @@ const Container = styled.div`
         align-items: center;
         justify-content: space-between;
         padding: 20px;
+        
+        .balance {
+            text-align: right;
+        }
     }
 
     .total {
@@ -65,7 +70,7 @@ const Container = styled.div`
         color: #72727A;
         border-bottom: 1px solid #f3f3f3;
         background-color: #FAFAFA;
-        padding-left: 28px;
+        padding-left: 30px;
 
         &.button {
             cursor: pointer;
@@ -93,7 +98,7 @@ const Container = styled.div`
         &.detail {
             background-color: #F0F0F0;
             border-color: #e6e6e6;
-            padding-left: 42px;
+            padding-left: 40px;
 
             &:first-of-type {
                 box-shadow: inset 0 5px 6px -5px #dedede;
@@ -104,12 +109,12 @@ const Container = styled.div`
             }
 
             &.locked {
-                padding-left: 56px;
+                padding-left: 40px;
             }
         }
 
         &.locked {
-            padding-left: 42px;
+            padding-left: 30px;
 
             @media (min-width: 768px) {
                 &.last {
@@ -128,7 +133,7 @@ const Container = styled.div`
         height: 12px;
         margin-top: 2px;
     }
-`
+`;
 
 const BalanceContainer = ({ account, profileBalance }) => {
     return (
@@ -144,33 +149,33 @@ const BalanceContainer = ({ account, profileBalance }) => {
                         </div>
                         <div className='total'>
                             <span><Translate id='profile.account.walletBalance'/></span>
-                            <Balance amount={profileBalance.walletBalance.walletBalance} symbol='near'/>
+                            <Balance amount={profileBalance.walletBalance.walletBalance}/>
                         </div>
                         <div className='item first'>
                             <span><Translate id='profile.account.reservedForStorage'/><Tooltip translate='minimumBalance'/></span>
-                            <span><Balance amount={profileBalance.walletBalance.reservedForStorage} symbol='near'/></span>
+                            <span><Balance amount={profileBalance.walletBalance.reservedForStorage}/></span>
                         </div>
                         <div className='item button' id='balance-1'>
                             <span><Translate id='profile.account.inStakingPools'/> <ChevronIcon color='#0072ce'/></span>
-                            <span><Balance amount={profileBalance.walletBalance.inStakingPools.sum} symbol='near'/></span>
+                            <span><Balance amount={profileBalance.walletBalance.inStakingPools.sum}/></span>
                         </div>
                         <Accordion trigger='balance-1'>
                             <div className='item detail'>
                                 <span><Translate id='profile.account.staked'/><Tooltip translate='staking.balanceBox.staked.info'/></span>
-                                <span><Balance amount={profileBalance.walletBalance.inStakingPools.staked} symbol='near'/></span>
+                                <span><Balance amount={profileBalance.walletBalance.inStakingPools.staked}/></span>
                             </div>
                             <div className='item detail'>
                                 <span><Translate id='profile.account.pendingRelease'/><Tooltip translate='staking.balanceBox.pending.info'/></span>
-                                <span><Balance amount={profileBalance.walletBalance.inStakingPools.pendingRelease} symbol='near'/></span>
+                                <span><Balance amount={profileBalance.walletBalance.inStakingPools.pendingRelease}/></span>
                             </div>
                             <div className='item detail'>
                                 <span><Translate id='profile.account.availableToWithdraw'/><Tooltip translate='staking.balanceBox.available.info'/></span>
-                                <span><Balance amount={profileBalance.walletBalance.inStakingPools.availableForWithdraw} symbol='near'/></span>
+                                <span><Balance amount={profileBalance.walletBalance.inStakingPools.availableForWithdraw}/></span>
                             </div>
                         </Accordion>
                         <div className='item'>
                             <span><Translate id='profile.account.available'/><Tooltip translate='availableBalanceInfo'/></span>
-                            <span><Balance amount={profileBalance.walletBalance.available} symbol='near'/></span>
+                            <span><Balance amount={profileBalance.walletBalance.available}/></span>
                         </div>
                     </div>
                     {profileBalance.lockupIdExists &&
@@ -183,48 +188,48 @@ const BalanceContainer = ({ account, profileBalance }) => {
                             </div>
                             <div className='total'>
                                 <span><Translate id='profile.lockup.lockupBalance'/></span>
-                                <Balance amount={profileBalance.lockupBalance.lockupBalance} symbol='near'/>
+                                <Balance amount={profileBalance.lockupBalance.lockupBalance}/>
                             </div>
                             <div className='item first'>
                                 <span><Translate id='profile.account.reservedForStorage'/><Tooltip translate='minimumBalance'/></span>
-                                <span><Balance amount={profileBalance.lockupBalance.reservedForStorage} symbol='near'/></span>
+                                <span><Balance amount={profileBalance.lockupBalance.reservedForStorage}/></span>
                             </div>
                             <div className='item button' id='balance-2'>
                                 <span><Translate id='profile.account.inStakingPools'/> <ChevronIcon color='#0072ce'/></span>
-                                <span><Balance amount={profileBalance.lockupBalance.inStakingPools.sum} symbol='near'/></span>
+                                <span><Balance amount={profileBalance.lockupBalance.inStakingPools.sum}/></span>
                             </div>
                             <Accordion trigger='balance-2'>
                                 <div className='item detail locked'>
                                     <span><Translate id='profile.account.staked'/><Tooltip translate='staking.balanceBox.staked.info'/></span>
-                                    <span><Balance amount={profileBalance.lockupBalance.inStakingPools.staked} symbol='near'/></span>
+                                    <span><Balance amount={profileBalance.lockupBalance.inStakingPools.staked}/></span>
                                 </div>
                                 <div className='item detail locked'>
                                     <span><Translate id='profile.account.pendingRelease'/><Tooltip translate='staking.balanceBox.pending.info'/></span>
-                                    <span><Balance amount={profileBalance.lockupBalance.inStakingPools.pendingRelease} symbol='near'/></span>
+                                    <span><Balance amount={profileBalance.lockupBalance.inStakingPools.pendingRelease}/></span>
                                 </div>
                                 <div className='item detail locked'>
                                     <span><Translate id='profile.account.availableToWithdraw'/><Tooltip translate='staking.balanceBox.available.info'/></span>
-                                    <span><Balance amount={profileBalance.lockupBalance.inStakingPools.availableForWithdraw} symbol='near'/></span>
+                                    <span><Balance amount={profileBalance.lockupBalance.inStakingPools.availableForWithdraw}/></span>
                                 </div>
                             </Accordion>
                             <div className='item'>
                                 <span><Translate id='profile.lockup.locked'/><Tooltip translate='lockedBalance'/></span>
-                                <span><Balance amount={profileBalance.lockupBalance.locked} symbol='near'/></span>
+                                <span><Balance amount={profileBalance.lockupBalance.locked}/></span>
                             </div>
                             <div className='item'>
                                 <span><Translate id='profile.lockup.unlocked'/><Tooltip translate='unlockedBalance'/></span>
-                                <span><Balance amount={profileBalance.lockupBalance.unlocked.sum} symbol='near'/></span>
+                                <span><Balance amount={profileBalance.lockupBalance.unlocked.sum}/></span>
                             </div>
                             <div className='item locked'>
                                 <span><Translate id='profile.account.availableToTransfer'/><Tooltip translate='unlockedAvailTransfer'/></span>
-                                <span><Balance amount={profileBalance.lockupBalance.unlocked.availableToTransfer} symbol='near'/></span>
+                                <span><Balance amount={profileBalance.lockupBalance.unlocked.availableToTransfer}/></span>
                             </div>
                         </div>
                     }
                 </>
             }
         </Container>
-    )
-}
+    );
+};
 
-export default BalanceContainer
+export default BalanceContainer;

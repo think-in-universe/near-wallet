@@ -1,9 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
-import RadioGroup from '../../common/radio_button/RadioGroup'
-import RadioButton from '../../common/radio_button/RadioButton'
-import Balance from '../../common/Balance'
-import { Translate } from 'react-localize-redux'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import styled from 'styled-components';
+
+import Balance from '../../common/balance/Balance';
+import RadioButton from '../../common/radio_button/RadioButton';
+import RadioGroup from '../../common/radio_button/RadioGroup';
 
 const Container = styled.div`
     > div {
@@ -24,22 +25,26 @@ const Container = styled.div`
         :last-of-type {
             > div {
                 display: flex;
-                align-items: center;
+                align-items: flex-start;
                 justify-content: space-between;
-                font-size: 13px;
+                font-size: 14px;
+
+                .balance {
+                    text-align: right;
+                }
 
                 :first-of-type {
                     color: #00C08B;
                 }
 
                 :last-of-type {
-                    margin-top: 3px;
+                    margin-top: 5px;
                     color: #6E7073;
                 }
             }
         }
     }
-`
+`;
 
 export default function SelectAccount({ accounts, onChange, selectedAccount }) {
     return (
@@ -53,16 +58,16 @@ export default function SelectAccount({ accounts, onChange, selectedAccount }) {
                         <div>
                             <div>
                                 <Translate id='staking.staking.available' />
-                                <Balance amount={account.totalUnstaked} symbol='near'/>
+                                <Balance amount={account.totalUnstaked} showBalanceInUSD={false}/>
                             </div>
                             <div>
                                 <Translate id='staking.staking.totalStaked' />
-                                <Balance amount={account.totalStaked} symbol='near'/>
+                                <Balance amount={account.totalStaked} showBalanceInUSD={false}/>
                             </div>
                         </div>
                     </Container>
                 </RadioButton>
             )}
         </RadioGroup>
-    )
+    );
 }

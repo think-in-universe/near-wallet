@@ -1,16 +1,14 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Button } from 'semantic-ui-react'
-import { Translate } from 'react-localize-redux'
-import { withRouter } from 'react-router'
-import classNames from '../../utils/classNames'
-import { Mixpanel } from '../../mixpanel/index'
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import { withRouter } from 'react-router';
+import { Button } from 'semantic-ui-react';
+import styled from 'styled-components';
 
-import ArrowGrnImage from '../../images/icon-arrow-grn.svg'
-import ArrowWhiteImage from '../../images/icon-arrow-white.svg'
-
-
-import styled from 'styled-components'
+import ArrowGrnImage from '../../images/icon-arrow-grn.svg';
+import ArrowWhiteImage from '../../images/icon-arrow-white.svg';
+import { Mixpanel } from '../../mixpanel/index';
+import classNames from '../../utils/classNames';
 
 const CustomButton = styled(Button)`
     &&& {
@@ -18,7 +16,7 @@ const CustomButton = styled(Button)`
         margin: 24px 0 0 0;
         border: 2px solid;
         font-weight: 600;
-        height: 48px;
+        height: 56px;
         border-radius: 30px;
         
         font-size: 15px;
@@ -48,17 +46,55 @@ const CustomButton = styled(Button)`
             }
         }
 
+        &.dark-gray {
+            background-color: #272729;
+            border-color: #272729;
+            transition: 100ms;
+
+            :hover {
+                background-color: black;
+            }
+
+            :disabled {
+                background: #e6e6e6;
+                border-color: #e6e6e6;
+                opacity: 1 !important;
+                color: #A2A2A8;
+            }
+        }
+
+        &.gray-gray {
+            background-color: #F0F0F1;
+            border-color: #F0F0F1;
+            color: #3F4045;
+            transition: 100ms;
+
+            :hover {
+                background-color: #ececec;
+            }
+
+            :disabled {
+                opacity: 0.8;
+            }
+        }
+
         &.light-blue {
-            background-color: #F0F9FF !important;
+            background-color: #D6EDFF !important;
             border: 0;
-            color: #0072ce;
+            color: #005497;
             border-radius: 4px;
 
             &.small {
                 padding: 6px 12px;
                 height: auto;
                 font-weight: 400 !important;
-                font-size: 13px;
+                font-size: 12px;
+            }
+
+            &.rounded {
+                border-radius: 50px;
+                padding: 12px 15px;
+                width: auto;
             }
         }
 
@@ -226,11 +262,6 @@ const CustomButton = styled(Button)`
                 color: #fff;
                 background-color: #FF585D;
             }
-
-            :disabled {
-                background-color: #e6e6e6;
-                color: white;
-            }
         }
         &.gray-blue {
             color: #0072ce;
@@ -296,11 +327,11 @@ const CustomButton = styled(Button)`
             }
 
             &.gray {
-                color: #999;
+                color: #72727A;
 
                 :hover,
                 :focus {
-                    color: #999;
+                    color: #72727A;
                 }
             }
 
@@ -310,6 +341,20 @@ const CustomButton = styled(Button)`
                 :disabled {
                     opacity: 0.8;
                     background: transparent !important;
+                }
+            }
+
+            &.normal {
+                font-weight: 400;
+                font-size: 16px;
+            }
+
+            &.underline {
+                font-weight: 400;
+                text-decoration: underline;
+
+                :hover {
+                    text-decoration: none;
                 }
             }
 
@@ -410,7 +455,7 @@ const CustomButton = styled(Button)`
             width: 100%;
         }
     }
-`
+`;
 
 const FormButton = ({ 
     children, 
@@ -433,9 +478,9 @@ const FormButton = ({
         className={classNames([color, size, className, {'dots': sending}])}
         disabled={disabled}
         onClick={(e) => {
-            onClick && onClick(e)
-            linkTo && (linkTo.includes('http') ? window.location = linkTo : history.push(linkTo))
-            trackingId && Mixpanel.track(trackingId)
+            onClick && onClick(e);
+            linkTo && (linkTo.toLowerCase().startsWith('http') ? window.open(linkTo, '_blank') : history.push(linkTo));
+            trackingId && Mixpanel.track(trackingId);
         }}
         tabIndex='3'
     >
@@ -444,7 +489,7 @@ const FormButton = ({
             : children
         }
     </CustomButton>
-)
+);
 
 FormButton.propTypes = {
     children: PropTypes.node.isRequired,
@@ -457,6 +502,6 @@ FormButton.propTypes = {
     linkTo: PropTypes.string,
     className: PropTypes.string,
     trackingId: PropTypes.string
-}
+};
 
-export default withRouter(FormButton)
+export default withRouter(FormButton);

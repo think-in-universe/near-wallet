@@ -1,27 +1,35 @@
+import { utils } from 'near-api-js';
 import React, { useState, useEffect } from 'react';
+import { Translate } from 'react-localize-redux';
+import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 import { useSelector, useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { Translate } from 'react-localize-redux';
-import TwoFactorOption from './TwoFactorOption';
-import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
-import { validateEmail } from '../../../utils/account';
-import { MULTISIG_MIN_AMOUNT } from '../../../utils/wallet'
-import isApprovedCountryCode from '../../../utils/isApprovedCountryCode'
-import FormButton from '../../common/FormButton';
-import AlertBanner from '../../common/AlertBanner';
+
 import {
     initTwoFactor,
     verifyTwoFactor,
     deployMultisig,
     redirectToApp
 } from '../../../actions/account';
-import { clearGlobalAlert } from '../../../actions/status'
+import { clearGlobalAlert } from '../../../actions/status';
 import { useRecoveryMethods } from '../../../hooks/recoveryMethods';
-import EnterVerificationCode from '../EnterVerificationCode';
-import Container from '../../common/styled/Container.css';
 import { Mixpanel } from '../../../mixpanel/index';
-import { actionsPending } from '../../../utils/alerts'
-import Checkbox from '../../common/Checkbox'
+import { selectNearTokenFiatValueUSD } from '../../../slices/tokenFiatValues';
+import { validateEmail } from '../../../utils/account';
+import { actionsPending } from '../../../utils/alerts';
+import isApprovedCountryCode from '../../../utils/isApprovedCountryCode';
+import { MULTISIG_MIN_AMOUNT } from '../../../utils/wallet';
+import AlertBanner from '../../common/AlertBanner';
+import { getNearAndFiatValue } from '../../common/balance/helpers';
+import Checkbox from '../../common/Checkbox';
+import FormButton from '../../common/FormButton';
+import Container from '../../common/styled/Container.css';
+import EnterVerificationCode from '../EnterVerificationCode';
+import TwoFactorOption from './TwoFactorOption';
+
+const {
+    parseNearAmount
+} = utils.format;
 
 const StyledContainer = styled(Container)`
 
@@ -67,13 +75,14 @@ const StyledContainer = styled(Container)`
             font-weight: 500;
         }
     }
-`
+`;
 
 export function EnableTwoFactor(props) {
 
     const dispatch = useDispatch();
     const { accountId, has2fa } = useSelector(({ account }) => account);
     const status = useSelector(({ status }) => status);
+    const nearTokenFiatValueUSD = useSelector(selectNearTokenFiatValueUSD);
 
     const [initiated, setInitiated] = useState(false);
     const [option, setOption] = useState('email');
@@ -82,24 +91,26 @@ export function EnableTwoFactor(props) {
     const [country, setCountry] = useState('');
     const [twoFactorAmountApproved, setTwoFactorAmountApproved] = useState(false);
     const recoveryMethods = useRecoveryMethods(accountId);
-    const loading = status.mainLoader
-    const pendingTwoFactorAction = actionsPending('INIT_TWO_FACTOR', 'DEPLOY_MULTISIG')
+    const loading = status.mainLoader;
+    const pendingTwoFactorAction = actionsPending('INIT_TWO_FACTOR', 'DEPLOY_MULTISIG');
+
+    const multiSigMinAmountRaw = parseNearAmount(MULTISIG_MIN_AMOUNT);
 
     const method = {
         kind: `2fa-${option}`,
         detail: option === 'email' ? email : phoneNumber
-    }
+    };
 
     useEffect(() => {
         const email = recoveryMethods.filter(method => method.kind === 'email')[0];
         const phone = recoveryMethods.filter(method => method.kind === 'phone')[0];
 
         if (email) {
-            setEmail(email.detail)
+            setEmail(email.detail);
         }
 
         if (phone) {
-            setPhoneNumber(phone.detail)
+            setPhoneNumber(phone.detail);
         }
 
     }, [recoveryMethods]);
@@ -107,7 +118,7 @@ export function EnableTwoFactor(props) {
     const handleNext = async () => {
         if (!initiated && !loading && !has2fa && isValidInput()) {
             let response;
-            Mixpanel.track("2FA Click continue button", {option: option})
+            Mixpanel.track("2FA Click continue button", {option: option});
             await Mixpanel.withTracking("2FA Initialize two factor",
                 async () => response = await dispatch(initTwoFactor(accountId, method)),
                 () => {},
@@ -115,60 +126,60 @@ export function EnableTwoFactor(props) {
                     if (response && response.confirmed) {
                         await Mixpanel.withTracking("2FA Deploy multisig",
                             async () => await handleDeployMultisig()
-                        )
+                        );
                     } else {
-                        setInitiated(true)
+                        setInitiated(true);
                     }
                 }
-            )
+            );
         }
-    }
+    };
 
     const handleResendCode = async () => {
-        Mixpanel.track("2FA Resend code")
-        await dispatch(initTwoFactor(accountId, method))
-    }
+        Mixpanel.track("2FA Resend code");
+        await dispatch(initTwoFactor(accountId, method));
+    };
 
     const handleConfirm = async (securityCode) => {
         if (initiated && securityCode.length === 6) {
             await Mixpanel.withTracking("2FA Verify", 
                 async () => {
-                    await dispatch(verifyTwoFactor(securityCode))
-                    await dispatch(clearGlobalAlert())
-                    await handleDeployMultisig()
+                    await dispatch(verifyTwoFactor(securityCode));
+                    await dispatch(clearGlobalAlert());
+                    await handleDeployMultisig();
                 }
-            )
+            );
         }
-    }
+    };
 
     const handleDeployMultisig = async () => {
-        await dispatch(deployMultisig())
-        await dispatch(redirectToApp('/profile'))
-    }
+        await dispatch(deployMultisig());
+        await dispatch(redirectToApp('/profile'));
+    };
 
     const handleGoBack = () => {
-        setInitiated(false)
-        Mixpanel.track("2FA Go back")
-    }
+        setInitiated(false);
+        Mixpanel.track("2FA Go back");
+    };
 
     const isValidInput = () => {
         switch (option) {
             case 'email':
-                return validateEmail(email)
+                return validateEmail(email);
             case 'phone':
-                return isApprovedCountryCode(country) && isValidPhoneNumber(phoneNumber)
+                return isApprovedCountryCode(country) && isValidPhoneNumber(phoneNumber);
             default:
-                return false
+                return false;
         }
-    }
+    };
 
 
     if (!initiated) {
         return (
-            <StyledContainer className='small-centered'>
+            <StyledContainer className='small-centered border'>
                 <AlertBanner
                     title='twoFactor.alertBanner.title'
-                    data={MULTISIG_MIN_AMOUNT}
+                    data={getNearAndFiatValue(multiSigMinAmountRaw, nearTokenFiatValueUSD)}
                     button='twoFactor.alertBanner.button'
                     theme='alert'
                     linkTo='https://docs.near.org/docs/concepts/storage-staking'
@@ -223,7 +234,7 @@ export function EnableTwoFactor(props) {
                             checked={twoFactorAmountApproved}
                             onChange={e => setTwoFactorAmountApproved(e.target.checked)}
                         />
-                        <span><Translate id='twoFactor.checkBox' data={{ amount: MULTISIG_MIN_AMOUNT }}/></span>
+                        <span><Translate id='twoFactor.checkBox' data={{ amount: getNearAndFiatValue(multiSigMinAmountRaw, nearTokenFiatValueUSD) }}/></span>
                     </label>
                     <FormButton
                         color='blue'
@@ -244,7 +255,7 @@ export function EnableTwoFactor(props) {
                     </FormButton>
                 </form>
             </StyledContainer>
-        )
+        );
     } else {
         return (
             <EnterVerificationCode
@@ -254,9 +265,10 @@ export function EnableTwoFactor(props) {
                 onConfirm={handleConfirm}
                 onGoBack={handleGoBack}
                 onResend={handleResendCode}
-                loading={loading}
+                reSending={actionsPending('INIT_TWO_FACTOR')}
+                verifyingCode={loading}
                 localAlert={status.localAlert}
             />
-        )
+        );
     }
 }

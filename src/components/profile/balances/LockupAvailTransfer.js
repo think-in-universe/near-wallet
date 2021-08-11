@@ -1,9 +1,10 @@
-import React from 'react'
-import styled from 'styled-components'
-import FormButton from '../../common/FormButton'
-import GiftIcon from '../../svg/GiftIcon'
-import { Translate } from 'react-localize-redux'
-import { utils } from 'near-api-js'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import styled from 'styled-components';
+
+import { getNearAndFiatValue } from '../../common/balance/helpers';
+import FormButton from '../../common/FormButton';
+import GiftIcon from '../../svg/GiftIcon';
 
 const Container = styled.div`
     background-color: #C8F6E0;
@@ -38,13 +39,18 @@ const Container = styled.div`
             margin-top: 25px !important;
         }
     }
-`
+`;
 
-const LockupAvailTransfer = ({ onTransfer, available, sending }) => {
+const LockupAvailTransfer = ({ onTransfer, available, sending, tokenFiatValue }) => {
     return (
         <Container className='lockup-avail-transfer'> 
             <GiftIcon/>
-            <div><Translate id='profile.lockupBanner.title' data={{ amount: utils.format.formatNearAmount(available, 5) }}/></div>
+            <div>
+                <Translate
+                    id='profile.lockupBanner.title'
+                    data={{ amount: getNearAndFiatValue(available, tokenFiatValue) }}
+                />
+            </div>
             <FormButton color='green-dark border'
                 disabled={sending}
                 sending={sending}
@@ -53,7 +59,7 @@ const LockupAvailTransfer = ({ onTransfer, available, sending }) => {
                     <Translate id='profile.lockupBanner.cta'/>
             </FormButton>
         </Container>
-    )
-}
+    );
+};
 
-export default LockupAvailTransfer
+export default LockupAvailTransfer;

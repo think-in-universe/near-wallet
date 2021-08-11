@@ -1,8 +1,9 @@
 import React from 'react';
+import { Translate } from 'react-localize-redux';
+
+import FormButton from '../../common/FormButton';
 import Modal from "../../common/modal/Modal";
 import ModalTheme from './ModalTheme';
-import FormButton from '../../common/FormButton';
-import { Translate } from 'react-localize-redux';
 
 const InstructionsModal = ({ open, onClose }) => {
     return (
@@ -13,7 +14,7 @@ const InstructionsModal = ({ open, onClose }) => {
             closeButton='desktop'
         >
             <ModalTheme/>
-            <h2><Translate id='setupLedgerSteps.header'/></h2>
+            <h2 className='title'><Translate id='setupLedgerSteps.header'/></h2>
             <ol>
                 <li><Translate id='setupLedgerSteps.one'/></li>
                 <li><Translate id='setupLedgerSteps.two'/></li>
@@ -24,6 +25,6 @@ const InstructionsModal = ({ open, onClose }) => {
             </FormButton>
         </Modal>
     );
-}
+};
 
 export default InstructionsModal;

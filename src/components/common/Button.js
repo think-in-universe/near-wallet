@@ -1,13 +1,13 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import PropTypes from 'prop-types';
 
 const StyledButton = styled.button`
     border-radius: 40px;
     padding: 5px 32px;
     outline: none;
     font-size: 15px;
-    height: 48px;
+    height: 56px;
     font-weight: 600;
     width: ${props => props.fullWidth === true ? "100%" : "auto"};
     cursor: pointer;
@@ -32,7 +32,7 @@ const StyledButton = styled.button`
         opacity: 0.3;
         cursor: not-allowed;
     }
-`
+`;
 
 const Button = (props) => (
     <StyledButton
@@ -46,7 +46,7 @@ const Button = (props) => (
     >
         {props.children}
     </StyledButton>
-)
+);
 
 Button.propTypes = {
   disabled: PropTypes.bool,
@@ -58,6 +58,6 @@ Button.defaultProps = {
   disabled: false,
   theme: 'primary',
   fullWidth: true,
-}
+};
 
 export default Button;

@@ -1,7 +1,7 @@
-import { createGlobalStyle } from 'styled-components'
-import 'semantic-ui-css/semantic.min.css'
-import EmailIconGray from '../images/email-icon-gray.svg'
-import CloseBtn from '../images/close-btn.svg'
+import { createGlobalStyle } from 'styled-components';
+
+import 'semantic-ui-css/semantic.min.css';
+import CloseBtn from '../images/close-btn.svg';
 
 export default createGlobalStyle`
 
@@ -68,12 +68,12 @@ export default createGlobalStyle`
     h1, .h1 {
         font-weight: 900 !important;
         color: #24272a;
-        font-size: calc(24px + (38 - 24) * ((100vw - 300px) / (1600 - 300))) !important;
+        font-size: calc(22px + (30 - 22) * ((100vw - 300px) / (1600 - 300))) !important;
         word-wrap: break-word;
 
         @media (max-width: 300px) {
             h1 {
-                font-size: 24px;
+                font-size: 22px;
             }
         }
 
@@ -82,13 +82,17 @@ export default createGlobalStyle`
         }
     }
     h2, .h2 {
-        font-size: 24px !important;
-        font-weight: 900 !important;
-        color: #24272a !important;
+        font-size: 24px;
+        font-weight: 900;
+        color: #72727A;
         margin: 0px;
 
         @media (max-width: 767px) {
-            font-size: 18px !important;
+            font-size: 18px;
+        }
+
+        b {
+            color: #3F4045;
         }
     }
     h3, .h3 {
@@ -140,56 +144,70 @@ export default createGlobalStyle`
         }
     }
 
-    .username-input-icon {
-        position: relative;
-
-        &:after {
-            content: '';
-            background: url(${EmailIconGray}) center no-repeat;
-            display: inline-block;
-            height: 17px;
-            width: 17px;
-            position: absolute;
-            left: 15px;
-            top: calc(50% - -4px);
-            transform: translateY(-50%);
-            pointer-events: none;
-        }
-        input {
-            padding-left: 37px !important;
+    .animated-dots {
+        :after {
+            content: '.';
+            animation: link 1s steps(5, end) infinite;
+        
+            @keyframes link {
+                0%, 20% {
+                    color: rgba(0,0,0,0);
+                    text-shadow:
+                        .3em 0 0 rgba(0,0,0,0),
+                        .6em 0 0 rgba(0,0,0,0);
+                }
+                40% {
+                    color: #4a4f54;
+                    text-shadow:
+                        .3em 0 0 rgba(0,0,0,0),
+                        .6em 0 0 rgba(0,0,0,0);
+                }
+                60% {
+                    text-shadow:
+                        .3em 0 0 #4a4f54,
+                        .6em 0 0 rgba(0,0,0,0);
+                }
+                80%, 100% {
+                    text-shadow:
+                        .3em 0 0 #4a4f54,
+                        .6em 0 0 #4a4f54;
+                }
+            }
         }
     }
 
-    input {
-        font-size: 16px !important;
-        width: 100% !important;
-        height: 48px !important;
-        border: 2px solid #E4E4E6 !important;
-        padding: 0 0 0 15px !important;
-        color: #4a4f54 !important;
-        font-weight: 300 !important;
-        position: relative !important;
-        margin-top: 8px !important;
+    input, .react-phone-number-input__input {
+        font-size: 16px;
+        width: 100%;
+        height: 48px;
+        border: 2px solid #FAFAFA;
+        padding: 0 0 0 15px;
+        color: #24272A;
+        font-weight: normal;
+        position: relative;
+        margin-top: 8px;
         outline: none;
         appearance: none;
-        border-radius: 8px !important;
+        border-radius: 8px;
+        background-color: #FAFAFA;
 
         ::placeholder {
-            color: #999999;
+            color: #A2A2A8;
         }
 
         :focus {
-            border-color: #0072ce !important;
-            background-color: #fff !important;
-            box-shadow: 0 0 0 2pt #C8E3FC !important;
+            border-color: #0072ce;
+            background-color: #fff;
+            box-shadow: 0 0 0 2pt #C8E3FC;
         }
 
-        &.amount-input {
-            font-size: 38px !important;
-            margin: 0 !important;
-            font-weight: 600 !important;
-            height: 62px !important;
-            color: #24272A !important;
+        &.stake-amount-input,
+        &.send-amount-input {
+            font-size: 38px;
+            margin: 0;
+            font-weight: 600;
+            height: 62px;
+            color: #24272A;
 
             ::placeholder {
                 color: #CCCCCC;
@@ -197,9 +215,27 @@ export default createGlobalStyle`
             }
 
             &.error {
-                color: #ff585d !important;
+                color: #ff585d;
             }
         }
+
+        &.problem {
+            border: 2px solid #ff585d;
+
+            &:focus {
+                box-shadow: 0px 0px 0px 2pt #FFBDBE;
+            }
+        }
+
+        &.success {
+            border: 2px solid #00C08B;
+
+            &:focus {
+                box-shadow: 0px 0px 0px 2pt #c2f6ff;
+            }
+        }
+
+
     }
 
     input::-webkit-outer-spin-button,
@@ -217,7 +253,7 @@ export default createGlobalStyle`
         margin-top: 10px;
 
         &.success {
-            color: #6AD1E3;
+            color: #00C08B;
         }
 
         &.error {
@@ -244,23 +280,24 @@ export default createGlobalStyle`
     .problem > .input > input,
     .problem > .input > input:focus,
     .problem > input {
-        border: 2px solid #ff585d !important;
+        border: 2px solid #ff585d;
     }
 
     .problem > .input > input:focus,
     .problem > input:focus {
-        box-shadow: 0px 0px 0px 2pt #FFBDBE !important;
+        box-shadow: 0px 0px 0px 2pt #FFBDBE;
     }
 
     .success > .input > input,
     .success > .input > input:focus,
     .success > input {
-        border: 2px solid #6ad1e3 !important;
+        border: 2px solid #00C08B;
+        background-color: white;
     }
 
     .success > .input > input:focus,
     .success > input:focus {
-        box-shadow: 0px 0px 0px 2pt #c2f6ff !important;
+        box-shadow: 0px 0px 0px 2pt #c5ffef;
     }
 
     b {
@@ -290,7 +327,7 @@ export default createGlobalStyle`
         color: #ff585d !important;
     }
     .color-green {
-        color: #5ace84 !important;
+        color: #00C08B !important;
     }
 
     .ui.popup > .header {
@@ -440,12 +477,12 @@ export default createGlobalStyle`
 
     @media screen and (max-width: 767px) {
         h1, .h1 {
-            font-size: 24px !important;
+            font-size: 22px !important;
             font-weight: 500;
             color: #24272a;
         }
         h2, .h2 {
-            font-size: 18px !important;
+            font-size: 18px;
             font-weight: 600;
             margin: 0px;
         }
@@ -520,4 +557,4 @@ export default createGlobalStyle`
         display: flex;
         justify-content: center;
     }
-`
+`;

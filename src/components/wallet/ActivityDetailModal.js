@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { Translate } from 'react-localize-redux'
-import styled from 'styled-components'
+import React, { useEffect } from 'react';
+import { Translate } from 'react-localize-redux';
+import { useDispatch } from 'react-redux';
+import styled from 'styled-components';
 
-import FormButton from '../common/FormButton'
-import Modal from "../common/modal/Modal"
-import { ActionTitle, ActionValue, ActionMessage, ActionStatus, translateData } from './ActivityBox'
-import { EXPLORER_URL, TRANSACTIONS_REFRESH_INTERVAL } from '../../utils/wallet'
+import { EXPLORER_URL, TRANSACTIONS_REFRESH_INTERVAL } from '../../utils/wallet';
+import FormButton from '../common/FormButton';
+import Modal from "../common/modal/Modal";
+import { ActionTitle, ActionValue, ActionMessage, ActionStatus, translateData } from './ActivityBox';
 
 const StyledContainer = styled.div`
     display: flex;
@@ -14,8 +14,11 @@ const StyledContainer = styled.div`
     align-items: center;
 
     h2 {
-        text-align: center;
-        margin-top: 20px;
+        &.title {
+            text-align: center;
+            margin-top: 20px;
+            color: #24272a;
+        }
     }
 
     .row {
@@ -75,20 +78,28 @@ const StyledContainer = styled.div`
             .value {
                 font-weight: 700;
                 color: #24272a;
-                height: 20px;
                 white-space: nowrap;
+                display: flex;
+                align-items: center;
+                text-align: right;
 
                 &.transferred {
-                    &::before {
-                        content: '-'
+                    .near-amount {
+                        &::before {
+                            content: '-'
+                        }
                     }
                 }
                 &.received {
                     color: #00C08B;
-
-                    &::before {
-                        content: '+'
+                    .near-amount {
+                        &::before {
+                            content: '+'
+                        }
                     }
+                }
+                .fiat-amount {
+                    font-weight: 400;
                 }
             }
         }
@@ -104,7 +115,7 @@ const StyledContainer = styled.div`
             max-width: 400px;
         }
     }
-`
+`;
 
 const ActivityDetailModal = ({ 
     open,
@@ -121,19 +132,19 @@ const ActivityDetailModal = ({
         hash,
         signer_id,
         block_timestamp
-    } = transaction
+    } = transaction;
 
-    const dispatch = useDispatch()
-    const getTransactionStatusConditions = () => checkStatus && !document.hidden && dispatch(getTransactionStatus(hash, signer_id, accountId))
+    const dispatch = useDispatch();
+    const getTransactionStatusConditions = () => checkStatus && !document.hidden && dispatch(getTransactionStatus(hash, signer_id, accountId));
 
     useEffect(() => {
-        getTransactionStatusConditions()
+        getTransactionStatusConditions();
         const interval = setInterval(() => {
-            getTransactionStatusConditions()
-        }, TRANSACTIONS_REFRESH_INTERVAL)
+            getTransactionStatusConditions();
+        }, TRANSACTIONS_REFRESH_INTERVAL);
 
-        return () => clearInterval(interval)
-    }, [hash, checkStatus])
+        return () => clearInterval(interval);
+    }, [hash, checkStatus]);
 
     return (
         <Modal
@@ -143,7 +154,7 @@ const ActivityDetailModal = ({
             closeButton
         >
             <StyledContainer>
-                <h2>
+                <h2 className='title'>
                     <ActionTitle 
                         transaction={transaction}
                         actionArgs={actionArgs}
@@ -216,7 +227,7 @@ const ActivityDetailModal = ({
                 </FormButton>
             </StyledContainer>
         </Modal>
-    )
-}
+    );
+};
 
-export default ActivityDetailModal
+export default ActivityDetailModal;

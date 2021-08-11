@@ -1,10 +1,12 @@
-import React from 'react'
-import Modal from '../../common/modal/Modal'
-import FormButton from '../../common/FormButton'
-import { Translate } from 'react-localize-redux'
-import styled from 'styled-components'
-import ValidatorBox from './ValidatorBox'
-import Balance from '../../common/Balance'
+import React from 'react';
+import { Translate } from 'react-localize-redux';
+import { Textfit } from 'react-textfit';
+import styled from 'styled-components';
+
+import Balance from '../../common/balance/Balance';
+import FormButton from '../../common/FormButton';
+import Modal from '../../common/modal/Modal';
+import ValidatorBox from './ValidatorBox';
 
 const Container = styled.div`
     display: flex;
@@ -13,39 +15,49 @@ const Container = styled.div`
     text-align: center;
     padding-top: 40px;
 
+    h2 {
+        color: #24272a !important;
+    }
+
     @media (min-width: 500px) {
         padding: 40px 25px;
     }
 
     .validator-box {
         width: 100%;
-        max-width: 350px;
+        max-width: 400px;
 
-        div {
-            :first-of-type {
-                div {
-                    :first-of-type {
-                        max-width: 150px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        text-align: left;
-                    }
+        .left {
+            > div {
+                :first-of-type {
+                    max-width: 150px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    text-align: left;
                 }
             }
         }
     }
 
+    .amount {
+        width: 100%;
+        max-width: 400px;
+    }
+
     .stake-amount {
-        font-size: 40px;
         color: #24272a;
         font-weight: 500;
         margin: 40px 0 !important;
+
+        .fiat-amount {
+            font-size: 14px;
+        }
     }
 
     .green {
         margin-top: 50px !important;
-        width: 100% !important;
-        max-width: 350px !important;
+        width: 100%;
+        max-width: 400px;
     }
 
     .link {
@@ -55,7 +67,7 @@ const Container = styled.div`
     .ledger-disclaimer {
         font-style: italic;
         margin-top: 50px;
-        max-width: 350px;
+        max-width: 400px;
     }
 
     .divider {
@@ -63,7 +75,7 @@ const Container = styled.div`
         border-top: 1px solid #F2F2F2;
         position: relative;
         margin-bottom: 40px;
-        max-width: 350px;
+        max-width: 400px;
 
         div {
             background-color: white;
@@ -76,7 +88,7 @@ const Container = styled.div`
         }
     }
 
-`
+`;
 
 const StakeConfirmModal = ({ open, onClose, onConfirm, validator, amount, loading, title, disclaimer, label, sendingString }) => {
     return (
@@ -88,7 +100,9 @@ const StakeConfirmModal = ({ open, onClose, onConfirm, validator, amount, loadin
         >
             <Container>
                 <h2><Translate id={title}/></h2>
-                <Balance amount={amount || '0'} className='stake-amount'/>
+                <Textfit mode='single' max={40} className='amount'>
+                    <Balance amount={amount} className='stake-amount'/>
+                </Textfit>
                 {label && <div className='divider'><div><Translate id={label}/></div></div>}
                 <ValidatorBox 
                     validator={validator}
@@ -111,6 +125,6 @@ const StakeConfirmModal = ({ open, onClose, onConfirm, validator, amount, loadin
             </Container>
         </Modal>
     );
-}
+};
 
-export default StakeConfirmModal
+export default StakeConfirmModal;

@@ -50,6 +50,10 @@ export default createGlobalStyle`
         }
 
         h2 {
+            &.title {
+                color: #24272a;
+            }
+
             text-align: center;
 
             @media (max-width: 500px) {
